@@ -1,0 +1,32 @@
+command setmoney [<offline player>] [<integer>]:
+	permission: admin.setmoney
+	trigger:
+		if arg 1 is not set:
+			send "&7[&aEconomy&7] &fPlease provide a player."
+		else:
+			if arg 2 is not set:
+				send "&7[&aEconomy&7] &fPlease provide a value."
+			else:
+				set {money::%arg 1's uuid%} to arg 2
+				send "&7[&aEconomy&7] &fSet %arg 1%'s money to %arg 2%."
+command moneylb:
+	trigger:
+		set {_sorted::*} to sorted indices of {money::*} in descending order
+		loop 10 times:
+			set {_p} to {_sorted::%loop-number%} parsed as offline player
+			send "&7[&aEconomy&7] &f%loop-number% | %{_p}% - %{money::%{_sorted::%loop-number%}%}%"
+command pay [<offline player>] [<integer>]:
+	trigger:	
+		if arg 1 is not set:
+			send "&7[&aEconomy&7] &fPlease provide a player."
+		else:
+			if arg 2 < 500:
+				send "&7[&aEconomy&7] &fPlease provide a value higher than 500."
+			else:
+				if {money::%player's uuid%} >= arg 2:
+					add arg 2 to {money::%arg 1's uuid%} 
+					remove arg 2 from {money::%player's uuid%}
+					send "&7[&aEconomy&7] &fYou have payed %arg 1% %arg 2% coins."
+					send "&7[&aEconomy&7] &fYou have been payed by %arg 1% %arg 2% coins." to arg 1
+				else:
+					send "&7[&aEconomy&7] &fYou don't have the money to pay this amount."
